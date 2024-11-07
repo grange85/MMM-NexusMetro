@@ -1,0 +1,19 @@
+{
+  "name": "mmm-nexusmetro",
+  "version": "1.0.0",
+  "main": "MMM-NexusMetro.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grange85/MMM-nexusmetro.git"
+  },
+  "author": "grange85",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grange85/MMM-nexusmetro/issues"
+  },
+  "homepage": "https://github.com/grange85/MMM-nexusmetro#readme",
+  "description": ""
+}
