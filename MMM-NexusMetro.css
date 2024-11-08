@@ -7,5 +7,19 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
+ul.nexusmetro li:before {
+	content: "[M]";
+	padding-right: 10px;
+	color: red;
+}
+ul.nexusmetro li:nth-child(1):before {
+	color: green;
+}
 
+ul.nexusmetro li:nth-child(2):before {
+	color: red;
+}
+ul.nexusmetro li:nth-child(3):before {
+	color: red;
+}
 

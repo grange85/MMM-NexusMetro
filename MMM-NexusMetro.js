@@ -7,9 +7,10 @@
 Module.register("MMM-NexusMetro", {
   defaults: {
     station: "MSN",
+    stationname: "Monkseaton",
     platform: 1,
-    updateInterval: 60000,
-    initialLoadDelay: 4250,
+    updateInterval: 30000,
+    initialLoadDelay: 250,
   },
   getStyles: function() {
     return ["MMM-NexusMetro.css"];
@@ -18,31 +19,45 @@ Module.register("MMM-NexusMetro", {
     Log.info("Starting module: " + this.name);
     this.url = "https://metro-rti.nexus.org.uk/api/times/" + this.config.station + "/" + this.config.platform;
     this.nexusmetro = [];
+    this.header = "Real time information for " + this.config.stationname + " platform " + this.config.platform ;
     //this.getNexusMetro();
     this.scheduleUpdate();       // <-- When the module updates (see below)
   },
   getDom: function() {
     var element = document.createElement("div");
     element.className = "myContent";
+    nexusmetrotable = "<h2>" + this.header + "</h2>";
     if (this.nexusmetro) {
-	nexusmetrotable = "<table class=\"nexusmetro-table\"><th>Due in</th><th>Destination</th><th>Last location</th>";
+	nexusmetrotable += "<ul class=\"nexusmetro\">";
 	    for (const [key, value] of Object.entries(this.nexusmetro)) {
-		    console.log(`Key: ${key}, Value: ${value}`);
-		    console.log(value.lastEvent);
-		    nexusmetrotable += "<tr>"
-		    nexusmetrotable += "<td>" + value.dueIn + "</td>";
-		    nexusmetrotable += "<td>" + value.destination + "</td>";
-		    nexusmetrotable += "<td>" + value.lastEvent + " " + value.lastEventLocation + "</td>";
-		    nexusmetrotable += "<tr>"
+		    if (value.dueIn < 0) {console.log("train left"); continue;}
+		    switch(value.lastEvent) {
+			    case "DEPARTED":
+				    metrostatus = "has just left";
+				    break;
+			    case "APPROACHING":
+				    metrostatus = "is just approaching";
+				    break;
+			    case "ARRIVED":
+				    metrostatus = "is at";
+				    break;
+			    default:
+				    metrostatus = "current status: " + value.lastEvent.toLowerCase();
+		    }
+
+						
+		    nexusmetrotable += "<li>";
+		    nexusmetrotable += "Due in " + value.dueIn + " minutes, ";
+		    nexusmetrotable += "a metro to " + value.destination + " ";
+		    nexusmetrotable += "" + metrostatus + " " + value.lastEventLocation.replace(/Platform/g, "platform") + "";
+		    nexusmetrotable += "</li>";
 	    }
-	nexusmetrotable += "</table>";
+	nexusmetrotable += "</ul>";
 	element.innerHTML = nexusmetrotable;
     }
-    console.log("getDom");
-    console.log(JSON.stringify(this.nexusmetro, null, 2));
     return element;
   },
-    scheduleUpdate: function() { 
+  scheduleUpdate: function() { 
       setInterval(() => {
 	  this.getNexusMetro();
 	}, this.config.updateInterval);
