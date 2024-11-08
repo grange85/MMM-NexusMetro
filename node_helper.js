@@ -20,7 +20,7 @@ module.exports = NodeHelper.create({
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 var result = JSON.parse(body); // sightings is from JSON data
-		console.log(response.statusCode + result);
+		console.log(url + result);
                 this.sendSocketNotification('NEXUSMETRO_RESULT', result);
 		
             }
